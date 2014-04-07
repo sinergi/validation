@@ -22,10 +22,10 @@ class AutoloaderTest extends PHPUnit_Framework_TestCase
             count(get_declared_classes()),
             'Sinergi\\Validation\\Autoloader::autoload() is trying to load classes outside of the Sinergi\\Validation namespace'
         );
-        Autoloader::autoload('Sinergi\\Validation\\Validation');
+        Autoloader::autoload('Sinergi\\Validation\\Validator');
         $this->assertTrue(
-            in_array('Sinergi\\Validation\\Validation', get_declared_classes()),
-            'Sinergi\\Validation\\Autoloader::autoload() failed to autoload the Sinergi\\Validation\\Validation class'
+            in_array('Sinergi\\Validation\\Validator', get_declared_classes()),
+            'Sinergi\\Validation\\Autoloader::autoload() failed to autoload the Sinergi\\Validation\\Validator class'
         );
     }
 }
