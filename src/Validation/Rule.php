@@ -9,6 +9,7 @@ class Rule
     const NUMERIC = 'NUMERIC';
     const EMAIL = 'EMAIL';
     const NOT_EMPTY = 'NOT_EMPTY';
+    const UNIQUE = 'UNIQUE';
 
     /**
      * @var string
@@ -66,6 +67,8 @@ class Rule
             return $this->assertEmail($value);
         } elseif ($this->rule === self::NUMERIC) {
             return $this->assertNumeric($value);
+        } elseif ($this->rule === self::UNIQUE) {
+            return $this->assertUnique($value);
         }
         return null;
     }
@@ -198,5 +201,23 @@ class Rule
     public static function notEmpty()
     {
         return new self(self::NOT_EMPTY);
+    }
+
+    /**
+     * @param mixed $value
+     * @return bool
+     */
+    private function assertUnique($value)
+    {
+        return !in_array($value, $this->params['haystack']);
+    }
+
+    /**
+     * @param array $haystack
+     * @return Rule
+     */
+    public static function unique(array $haystack)
+    {
+        return new self(self::UNIQUE, ['haystack' => $haystack]);
     }
 }
