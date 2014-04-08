@@ -1,6 +1,8 @@
 <?php
 namespace Sinergi\Validation;
 
+use InvalidArgumentException;
+
 class Rule
 {
     const LENGHT = 'LENGHT';
@@ -209,15 +211,28 @@ class Rule
      */
     private function assertUnique($value)
     {
-        return !in_array($value, $this->params['haystack']);
+        $haystack = $this->params['haystack'];
+        if (is_callable($haystack)) {
+            $retval = $haystack($value);
+            if ($retval || $retval === 1 || $retval === true) {
+                return false;
+            }
+            return true;
+        } else {
+            return !in_array($value, $haystack);
+        }
     }
 
     /**
-     * @param array $haystack
+     * @param array|callable $haystack
+     * @throws InvalidArgumentException
      * @return Rule
      */
-    public static function unique(array $haystack)
+    public static function unique($haystack)
     {
+        if (!is_array($haystack) && !is_callable($haystack)) {
+            throw new InvalidArgumentException;
+        }
         return new self(self::UNIQUE, ['haystack' => $haystack]);
     }
 }
