@@ -56,6 +56,16 @@ class Rule
     {
         if ($this->rule === self::LENGHT) {
             return $this->assertLenght($value);
+        } elseif ($this->rule === self::NOT_EMPTY) {
+            return $this->assertNotEmpty($value);
+        } elseif ($this->rule === self::MIN_LENGHT) {
+            return $this->assertMinLenght($value);
+        } elseif ($this->rule === self::MAX_LENGHT) {
+            return $this->assertMaxLenght($value);
+        } elseif ($this->rule === self::EMAIL) {
+            return $this->assertEmail($value);
+        } elseif ($this->rule === self::NUMERIC) {
+            return $this->assertNumeric($value);
         }
         return null;
     }
@@ -90,12 +100,44 @@ class Rule
     }
 
     /**
+     * @param mixed $value
+     * @return bool
+     */
+    private function assertMinLenght($value)
+    {
+        if (is_object($value) || is_array($value)) {
+            return false;
+        }
+
+        if (strlen($value) >= $this->params['min']) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * @param int $min
      * @return Rule
      */
     public static function minLenght($min)
     {
         return new self(self::MIN_LENGHT, ['min' => $min]);
+    }
+
+    /**
+     * @param mixed $value
+     * @return bool
+     */
+    private function assertMaxLenght($value)
+    {
+        if (is_object($value) || is_array($value)) {
+            return false;
+        }
+
+        if (strlen($value) <= $this->params['max']) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -108,6 +150,15 @@ class Rule
     }
 
     /**
+     * @param mixed $value
+     * @return bool
+     */
+    private function assertNumeric($value)
+    {
+        return is_numeric($value);
+    }
+
+    /**
      * @return Rule
      */
     public static function numeric()
@@ -116,11 +167,29 @@ class Rule
     }
 
     /**
+     * @param mixed $value
+     * @return bool
+     */
+    private function assertEmail($value)
+    {
+        return filter_var($value, FILTER_VALIDATE_EMAIL);
+    }
+
+    /**
      * @return Rule
      */
     public static function email()
     {
         return new self(self::EMAIL);
+    }
+
+    /**
+     * @param mixed $value
+     * @return bool
+     */
+    private function assertNotEmpty($value)
+    {
+        return !empty($value);
     }
 
     /**
