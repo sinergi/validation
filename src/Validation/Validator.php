@@ -28,18 +28,21 @@ class Validator extends AbstractValidator
 
     /**
      * @param mixed $value
+     * @param array|null $mask
      * @return bool
      */
-    public function validate($value)
+    public function validate($value, array $mask = null)
     {
         $retval = true;
         if (count($this->attributes)) {
             foreach ($this->attributes as $attribute) {
-                $attributeValue = $this->getAttributeValue($value, $attribute->getAttribute());
-                $assertion = $attribute->assert($attributeValue);
-                if (!$assertion) {
-                    $retval = false;
-                    $this->errors[$attribute->getAttribute()] = $attribute->errors();
+                if (null === $mask || in_array($attribute->getAttribute(), $mask)) {
+                    $attributeValue = $this->getAttributeValue($value, $attribute->getAttribute());
+                    $assertion = $attribute->assert($attributeValue);
+                    if (!$assertion) {
+                        $retval = false;
+                        $this->errors[$attribute->getAttribute()] = $attribute->errors();
+                    }
                 }
             }
         } else {
