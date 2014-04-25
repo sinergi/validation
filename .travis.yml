@@ -13,5 +13,6 @@ language: php
 
  matrix:
    allow_failures:
-     - php: hhvm
-   fast_finish: true
+     php: hhvm
+
+fast_finish: true
