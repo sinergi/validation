@@ -6,12 +6,12 @@ use Exception;
 class ValidationException extends Exception
 {
     /**
-     * @var array
+     * @var array|Error[]
      */
     private $errors;
 
     /**
-     * @return array
+     * @return array|Error[]
      */
     public function getErrors()
     {
@@ -19,7 +19,7 @@ class ValidationException extends Exception
     }
 
     /**
-     * @param array $errors
+     * @param array|Error[] $errors
      * @return $this
      */
     public function setErrors($errors)
