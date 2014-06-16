@@ -30,6 +30,7 @@ class Validator extends AbstractValidator
      * @param mixed $value
      * @param array|null $mask
      * @return bool
+     * @throws ValidationException
      */
     public function validate($value, array $mask = null)
     {
@@ -47,6 +48,11 @@ class Validator extends AbstractValidator
             }
         } else {
             $retval = $this->assert($value);
+        }
+        if (!$retval) {
+            $validationException = new ValidationException();
+            $validationException->setErrors($this->errors);
+            throw $validationException;
         }
         return $retval;
     }
