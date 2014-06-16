@@ -9,11 +9,38 @@ class Error
     private $error;
 
     /**
-     * @param string $error
+     * @var string
      */
-    public function __construct($error)
+    private $attribute;
+
+    /**
+     * @param string $error
+     * @param null|string $attribute
+     */
+    public function __construct($error, $attribute = null)
     {
         $this->error = $error;
+        if (null !== $attribute) {
+            $this->setAttribute($attribute);
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getAttribute()
+    {
+        return $this->attribute;
+    }
+
+    /**
+     * @param string $attribute
+     * @return $this
+     */
+    public function setAttribute($attribute)
+    {
+        $this->attribute = $attribute;
+        return $this;
     }
 
     /**

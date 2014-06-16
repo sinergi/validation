@@ -52,7 +52,11 @@ abstract class AbstractValidator
             $result = $rule->assert($value);
             if (!$result) {
                 $retval = false;
-                $this->errors[] = new Error($rule->getRule());
+                if (isset($this->attribute)) {
+                    $this->errors[] = new Error($rule->getRule(), $this->attribute);
+                } else {
+                    $this->errors[] = new Error($rule->getRule());
+                }
             }
         }
         return $retval;

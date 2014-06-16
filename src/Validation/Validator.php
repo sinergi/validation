@@ -42,7 +42,7 @@ class Validator extends AbstractValidator
                     $assertion = $attribute->assert($attributeValue);
                     if (!$assertion) {
                         $retval = false;
-                        $this->errors[$attribute->getAttribute()] = array_slice($attribute->errors(), 0, $attribute->getErrorLimit());
+                        $this->errors = array_merge($this->errors, array_slice($attribute->errors(), 0, $attribute->getErrorLimit()));
                     }
                 }
             }
