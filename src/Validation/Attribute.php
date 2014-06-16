@@ -6,7 +6,7 @@ class Attribute extends AbstractValidator
     /**
      * @var string
      */
-    private $attribute;
+    protected $attribute;
 
     /**
      * @var int

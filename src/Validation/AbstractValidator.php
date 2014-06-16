@@ -4,6 +4,11 @@ namespace Sinergi\Validation;
 abstract class AbstractValidator
 {
     /**
+     * @var string
+     */
+    protected $attribute;
+
+    /**
      * @var array|Rule[]
      */
     protected $rules = [];
