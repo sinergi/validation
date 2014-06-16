@@ -6,7 +6,7 @@ use Exception;
 class ValidationException extends Exception
 {
     /**
-     * @var array
+     * @var array|Error[]
      */
     private $errors;
 
