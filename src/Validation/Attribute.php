@@ -9,12 +9,36 @@ class Attribute extends AbstractValidator
     private $attribute;
 
     /**
+     * @var int
+     */
+    private $errorLimit;
+
+    /**
      * @param string $attribute
      */
     public function __construct($attribute)
     {
         $this->setAttribute($attribute);
     }
+
+    /**
+     * @return int
+     */
+    public function getErrorLimit()
+    {
+        return $this->errorLimit;
+    }
+
+    /**
+     * @param int $errorLimit
+     * @return $this
+     */
+    public function setErrorLimit($errorLimit)
+    {
+        $this->errorLimit = $errorLimit;
+        return $this;
+    }
+
 
     /**
      * @param string $attribute
