@@ -12,6 +12,7 @@ class Rule
     const EMAIL = 'EMAIL';
     const NOT_EMPTY = 'NOT_EMPTY';
     const UNIQUE = 'UNIQUE';
+    const REGEX = 'REGEX';
 
     /**
      * @var string
@@ -69,6 +70,8 @@ class Rule
             return $this->assertEmail($value);
         } elseif ($this->rule === self::NUMERIC) {
             return $this->assertNumeric($value);
+        } elseif ($this->rule === self::REGEX) {
+            return $this->assertRegex($value);
         } elseif ($this->rule === self::UNIQUE) {
             return $this->assertUnique($value);
         }
@@ -234,5 +237,24 @@ class Rule
             throw new InvalidArgumentException;
         }
         return new self(self::UNIQUE, ['haystack' => $haystack]);
+    }
+
+    /**
+     * @param mixed $value
+     * @return bool
+     */
+    private function assertRegex($value)
+    {
+        $regex = $this->params['regex'];
+        return (bool)preg_match($regex, $value);
+    }
+
+    /**
+     * @param string $regex
+     * @return Rule
+     */
+    public static function regex($regex)
+    {
+        return new self(self::REGEX, ['regex' => $regex]);
     }
 }
