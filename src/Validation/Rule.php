@@ -13,6 +13,7 @@ class Rule
     const NOT_EMPTY = 'NOT_EMPTY';
     const UNIQUE = 'UNIQUE';
     const REGEX = 'REGEX';
+    const IN_ARRAY = 'IN_ARRAY';
 
     /**
      * @var string
@@ -74,6 +75,8 @@ class Rule
             return $this->assertRegex($value);
         } elseif ($this->rule === self::UNIQUE) {
             return $this->assertUnique($value);
+        } elseif ($this->rule === self::IN_ARRAY) {
+            return $this->assertInArray($value);
         }
         return null;
     }
@@ -256,5 +259,24 @@ class Rule
     public static function regex($regex)
     {
         return new self(self::REGEX, ['regex' => $regex]);
+    }
+
+    /**
+     * @param mixed $value
+     * @return bool
+     */
+    private function assertInArray($value)
+    {
+        $array = $this->params['array'];
+        return in_array($value, $array);
+    }
+
+    /**
+     * @param string $array
+     * @return Rule
+     */
+    public static function inArray($array)
+    {
+        return new self(self::IN_ARRAY, ['array' => $array]);
     }
 }
