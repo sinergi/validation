@@ -14,6 +14,7 @@ class Rule
     const UNIQUE = 'UNIQUE';
     const REGEX = 'REGEX';
     const IN_ARRAY = 'IN_ARRAY';
+    const EQUALS_ATTRIBUTE = 'EQUALS_ATTRIBUTE';
 
     /**
      * @var string
@@ -54,10 +55,11 @@ class Rule
     }
 
     /**
-     * @param $value
+     * @param mixed $value
+     * @param array $relatedValues
      * @return mixed
      */
-    public function assert($value)
+    public function assert($value, array $relatedValues = null)
     {
         if ($this->rule === self::LENGHT) {
             return $this->assertLenght($value);
@@ -77,6 +79,8 @@ class Rule
             return $this->assertUnique($value);
         } elseif ($this->rule === self::IN_ARRAY) {
             return $this->assertInArray($value);
+        } elseif ($this->rule === self::EQUALS_ATTRIBUTE) {
+            return $this->assertEqualsAttribute($value, $relatedValues);
         }
         return null;
     }
@@ -278,5 +282,29 @@ class Rule
     public static function inArray($array)
     {
         return new self(self::IN_ARRAY, ['array' => $array]);
+    }
+
+    /**
+     * @param mixed $value
+     * @param array $relatedValues
+     * @return bool
+     */
+    private function assertEqualsAttribute($value, array $relatedValues = null)
+    {
+        $attributeName = $this->params['attributeName'];
+
+        if (isset($relatedValues[$attributeName]) && $value === $relatedValues[$attributeName]) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @param string $attributeName
+     * @return Rule
+     */
+    public static function equalsAttribute($attributeName)
+    {
+        return new self(self::EQUALS_ATTRIBUTE, ['attributeName' => $attributeName]);
     }
 }

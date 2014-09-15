@@ -48,13 +48,14 @@ abstract class AbstractValidator
 
     /**
      * @param mixed $value
+     * @param array $relatedValues
      * @return bool
      */
-    public function assert($value)
+    public function assert($value, array $relatedValues = null)
     {
         $retval = true;
         foreach ($this->rules as $rule) {
-            $result = $rule->assert($value);
+            $result = $rule->assert($value, $relatedValues);
             if (!$result) {
                 $retval = false;
                 if (isset($this->attribute)) {

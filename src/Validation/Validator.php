@@ -18,6 +18,11 @@ class Validator extends AbstractValidator
     protected $attributes = [];
 
     /**
+     * @var array
+     */
+    protected $relatedAttributesValues = null;
+
+    /**
      * @param string $attribute
      * @return Attribute
      */
@@ -34,12 +39,13 @@ class Validator extends AbstractValidator
      */
     public function validate($value, array $mask = null)
     {
+        $this->relatedAttributesValues = null;
         $retval = true;
         if (count($this->attributes)) {
             foreach ($this->attributes as $attribute) {
                 if (null === $mask || in_array($attribute->getAttribute(), $mask)) {
                     $attributeValue = $this->getAttributeValue($value, $attribute->getAttribute());
-                    $assertion = $attribute->assert($attributeValue);
+                    $assertion = $attribute->assert($attributeValue, $this->getRelatedAttributesValues($value));
                     if (!$assertion) {
                         $retval = false;
                         $this->errors = array_merge($this->errors, array_slice($attribute->errors(), 0, $attribute->getErrorLimit()));
@@ -84,6 +90,26 @@ class Validator extends AbstractValidator
                     return call_user_func([$object, $methods[$getter]]);
                 }
             }
+        }
+        return null;
+    }
+
+    /**
+     * @param array $values
+     * @return array
+     */
+    private function getRelatedAttributesValues($values)
+    {
+        if (is_array($values)) {
+            if (null !== $this->relatedAttributesValues) {
+                return $this->relatedAttributesValues;
+            }
+            $retval = [];
+            foreach ($this->attributes as $attribute) {
+                $retval[$attribute->getAttribute()] = $this->getAttributeValue($values, $attribute->getAttribute());
+            }
+
+            return $this->relatedAttributesValues = array_merge($values, $retval);
         }
         return null;
     }
